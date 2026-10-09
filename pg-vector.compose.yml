@@ -1,0 +1,20 @@
+services:
+  pg-vector:
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg-vector-data:/var/lib/postgresql
+      - ./pg-vector.init.sql:/docker-entrypoint-initdb.d/10-vector.sql:ro
+    networks:
+      - pg-vector-net
+
+volumes:
+  pg-vector-data:
+networks:
+  pg-vector-net:
