@@ -1,6 +1,7 @@
 services:
   pg-vector:
     image: pgvector/pgvector:pg18
+    container_name: postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: mydb
