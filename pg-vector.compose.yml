@@ -15,6 +15,20 @@ services:
     networks:
       - pg-vector-net
 
+  pg-admin:
+    image: dpage/pgadmin4:9.18.0
+    container_name: pg-admin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@pg.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    depends_on:
+      - pg-vector
+    networks:
+      - pg-vector-net
+
 volumes:
   pg-vector-data:
 networks:
