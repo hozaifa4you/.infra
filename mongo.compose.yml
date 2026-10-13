@@ -1,0 +1,44 @@
+name: mongodb
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mydb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mongo-net
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - mongo-net
+
+volumes:
+  mongo-data:
+  mongo-config:
+networks:
+  mongo-net:
