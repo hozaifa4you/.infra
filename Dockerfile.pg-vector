@@ -1,0 +1,3 @@
+FROM pgvector/pgvector:pg18
+
+COPY pg-vector.init.sql /docker-entrypoint-initdb.d/10-vector.sql

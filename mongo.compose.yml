@@ -1,4 +1,4 @@
-name: mongodb
+name: infra
 services:
   mongodb:
     image: mongo:8.0

@@ -1,6 +1,10 @@
+name: infra
 services:
   pg-vector:
-    image: pgvector/pgvector:pg18
+    build:
+      context: .
+      dockerfile: Dockerfile.pg-vector
+    image: local/pgvector:pg18
     container_name: postgres
     restart: unless-stopped
     environment:
@@ -11,7 +15,6 @@ services:
       - "5432:5432"
     volumes:
       - pg-vector-data:/var/lib/postgresql
-      - ./pg-vector.init.sql:/docker-entrypoint-initdb.d/10-vector.sql:ro
     networks:
       - pg-vector-net
 

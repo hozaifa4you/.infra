@@ -1,12 +1,43 @@
-name: redis
+name: infra
 services:
   redis:
     image: redis:8.10.0-alpine
     container_name: redis
+    restart: unless-stopped
+    command: redis-server --requirepass password
     ports:
       - 6379:6379
     volumes:
       - redis_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "redis-cli --no-auth-warning -a password ping | grep -q PONG",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - redis_network
+
+  redis-insight:
+    image: redis/redisinsight:3.8.0
+    container_name: redis-insight
+    restart: unless-stopped
+    environment:
+      RI_ACCEPT_TERMS_AND_CONDITIONS: "true"
+      RI_REDIS_HOST: redis
+      RI_REDIS_PORT: 6379
+      RI_REDIS_PASSWORD: password
+      RI_REDIS_ALIAS: local-redis
+    ports:
+      - 5540:5540
+    volumes:
+      - redis_insight_data:/data
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - redis_network
 
@@ -16,4 +47,6 @@ networks:
 
 volumes:
   redis_data:
+    driver: local
+  redis_insight_data:
     driver: local
