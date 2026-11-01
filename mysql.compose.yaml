@@ -1,4 +1,4 @@
-name: Iccep Pro
+name: infra
 
 services:
   mysql:
@@ -7,8 +7,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: iccepdb
-      MYSQL_USER: iccepuser
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: root
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
@@ -16,7 +16,7 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - mysql_net
-  
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
